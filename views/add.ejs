@@ -1,5 +1,11 @@
 <%- include('./partials/head.ejs') %>
 
+<style>
+  .hide {
+    display: none;
+  }
+</style>
+
 <div class="row w-100">
   <div class="col-lg-6 mx-auto mt-4">
     <div class="card shadow">
@@ -24,7 +30,7 @@
             />
           </div>
           <div class="mb-3">
-            <label class="fs-5" for="price">السعر</label>
+            <label class="fs-5" for="price">السعر أو سعر الكيلو</label>
             <input
               type="number"
               name="price"
@@ -60,14 +66,20 @@
               placeholder="ادخل الباركود"
             />
           </div>
-
+          
           <div class="mb-3">
-            <label class="fs-5" for="quantity">العدد</label>
+            <label class="fs-5" for="quantity">بالوزن أو بالعدد</label>
+            <select name="ptype" id="ptype" class="form-control form-control-lg">
+              <option value="by-quantity" selected>بالعدد</option>
+              <option value="by-weight">بالوزن</option>
+            </select>
+          <div class="mb-3">
+            <label class="fs-5" for="quantity">العدد أو الكمية المتاحة بالكيلو</label>
             <input
-              type="number"
+              type="text"
               name="quantity"
               class="form-control form-control-lg"
-              placeholder="ادخل العدد"
+              placeholder="العدد أو الكمية المتاحة بالكيلو"
               required
             />
           </div>
@@ -101,5 +113,19 @@
     </div>
   </div>
 </div>
+
+<!-- <script>
+  const ptype = document.getElementById("ptype")
+  ptype.addEventListener("change",()=>{
+    console.log(ptype.value)
+    if(ptype.value === "by-weight"){
+      // hide by quantity inputs & show by weight inputs
+      document.querySelector("div input[name='quantity']").parentElement.classList.add("hide")
+    }
+    else {
+      document.querySelector("div input[name='quantity']").parentElement.classList.remove("hide")
+    }
+  })
+</script> -->
 
 <%- include('./partials/footer.ejs') %>

@@ -80,6 +80,7 @@ router.post("/add", ensureAuthenticated, upload, (req, res) => {
     dealerPrice: req.body.dealerPrice,
     wholesale: req.body.wholesale,
     quantity: req.body.quantity,
+    isByWeight: req.body.ptype === "by-weight" ? true : false,
     barcode: req.body.barcode,
     category: req.body.category,
     image: req.file ? req.file.filename : "No Data",
