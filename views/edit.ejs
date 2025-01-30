@@ -55,13 +55,25 @@
           </div>
 
           <div class="mb-3">
-            <label class="fs-5" for="quantity">العدد</label>
+            <label class="fs-5" for="quantity">بالوزن أو بالعدد</label>
+            <select name="ptype" id="ptype" class="form-control form-control-lg">
+            <% if(data.isByWeight){ %>
+                <option value="by-quantity">بالعدد</option>
+                <option value="by-weight" selected>بالوزن</option>
+                <% } else{ %>  
+                  <option value="by-quantity" selected>بالعدد</option>
+                  <option value="by-weight">بالوزن</option>
+                  <% } %>
+                </select>
+          <div class="mb-3">
+            <label class="fs-5" for="quantity">العدد أو الكمية المتاحة بالكيلو</label>
             <input
-              type="number"
+              type="text"
               name="quantity"
-              value="<%= data.quantity %>"
               class="form-control form-control-lg"
-              placeholder="ادخل العدد"
+              placeholder="العدد أو الكمية المتاحة بالكيلو"
+              value="<%= data.quantity %>"
+              required
             />
           </div>
           <div class="mb-3">

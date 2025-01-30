@@ -170,6 +170,9 @@ router.post("/update/:id", ensureAuthenticated, upload, (req, res) => {
     new_image = req.body.old_image;
   }
 
+  console.log(req.body);
+  
+
   // here we added the new data
   ProductModel.findByIdAndUpdate(req.params.id, {
     name: req.body.name,
@@ -177,6 +180,7 @@ router.post("/update/:id", ensureAuthenticated, upload, (req, res) => {
     dealerPrice: req.body.dealerPrice,
     wholesale: req.body.wholesale,
     quantity: req.body.quantity,
+    isByWeight: req.body.ptype === "by-weight" ? true : false,
     barcode: req.body.barcode,
     category: req.body.category,
     image: new_image,

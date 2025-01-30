@@ -51,26 +51,30 @@ if (admin.cart.userDealer) { %>
                 </a>
               </td>
               <td>
-                <% if (ele.quantity <= 1) { %>
-                <a href="" class="btn me-2 disabled"
-                  ><i class="fa-solid fa-square-minus fs-4"></i>
-                </a>
-                <% }else { %>
-                <a href="/cart/decProduct/<%= index %>" class="btn me-2">
-                  <i class="fa-solid fa-square-minus fs-4"></i>
-                </a>
-                <% } %> <%= ele.quantity %> <% if (ele.quantity >= ele.
-                qtyInStore ) { %>
-
-                <a href="" class="btn ms-2 disabled"
-                  ><i class="fa-solid fa-square-plus fs-4"> </i>
-                </a>
-
-                <% }else{ %>
-                <a href="/cart/incProduct/<%= index %>" class="btn ms-2">
-                  <i class="fa-solid fa-square-plus fs-4"></i>
-                </a>
-                <%}%>
+                <% if(true){ %>
+                  <h1><%= JSON.stringify(ele) %></h1>
+                <% } else{ %>  
+                  <% if (ele.quantity <= 1) { %>
+                    <a href="" class="btn me-2 disabled"
+                      ><i class="fa-solid fa-square-minus fs-4"></i>
+                    </a>
+                    <% }else { %>
+                    <a href="/cart/decProduct/<%= index %>" class="btn me-2">
+                      <i class="fa-solid fa-square-minus fs-4"></i>
+                    </a>
+                    <% } %> <%= ele.quantity %> <% if (ele.quantity >= ele.
+                    qtyInStore ) { %>
+    
+                    <a href="" class="btn ms-2 disabled"
+                      ><i class="fa-solid fa-square-plus fs-4"> </i>
+                    </a>
+    
+                    <% }else{ %>
+                    <a href="/cart/incProduct/<%= index %>" class="btn ms-2">
+                      <i class="fa-solid fa-square-plus fs-4"></i>
+                    </a>
+                    <%}%>
+               <% } %>
               </td>
               <td><%= ele.priceOfOne %></td>
               <td>
