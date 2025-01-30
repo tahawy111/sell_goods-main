@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="icon" href="/project_files/imgs/Shopping.png" />
+    <link rel="stylesheet" href="/css/datatables.min.css" />
+  </head>
+  <body>
+    <div class="row w-100">
+      <div class="col-lg-5 mx-auto mt-4">
+        <div class="card shadow">
+          <div class="card-header bg-danger my-3 shadow-lg">
+            <h1 class="text-light text-center">♥ Elfath store ♥</h1>
+          </div>
+          <div class="card-header bg-primary">
+            <h3 class="text-light">تسجيل الدخول</h3>
+          </div>
+          <%- include('./partials/message') %>
+          <div class="card-body p-4">
+            <form action="/login" method="post">
+              <div class="mb-3">
+                <label class="fs-5" for="username">اسم المستخدم</label>
+                <input
+                  type="text"
+                  name="username"
+                  class="form-control form-control-lg"
+                  placeholder="ادخل اسم المستخدم"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="fs-5" for="password">كلمة المرور</label>
+                <input
+                  type="password"
+                  name="password"
+                  class="form-control form-control-lg"
+                  placeholder="ادخل كلمة المرور"
+                />
+              </div>
+
+              <input
+                type="submit"
+                value="Login"
+                class="btn btn-primary btn-lg"
+              />
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include('./partials/footer.ejs') %>
+  </body>
+</html>

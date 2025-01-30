@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="icon" href="/project_files/imgs/Shopping.png" />
+    <link rel="stylesheet" href="/css/datatables.min.css" />
+    <!-- fontawesome -->
+    <link rel="stylesheet" href="/css/all.min.css">
+  </head>
+  <body>
+    <nav class="navbar navbar-dark navbar-expand-lg bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand fs-4 fw-bold" href="/">الأسمراني</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/">الرئيسية</a>
+            </li>
+            <li class="nav-item">
+             
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                جملة
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="/add-user-dealer">اضافة عميل جملة</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="/user-dealer-list">قائمة العملاء الجملة</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                الماليات
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="/search-for-bills">البحث عن الفواتير</a></li>
+                <li><a class="dropdown-item" href="/bills-list">قائمة الفواتير</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="/close-account-daily">تقفيل الحساب يوميا</a></li>
+                <li><a class="dropdown-item" href="/daily-accounts-list">قائمة الحسابات</a></li>
+                <li><a class="dropdown-item" href="/monthly-accounts-list">قائمة الحسابات الشهرية</a></li>
+                <li><a class="dropdown-item" href="/search-for-closing-account">البحث عن قائمة الحسابات</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="/pull-Money">سحب فلوس</a></li>
+                <li><a class="dropdown-item" href="/pull-Money-list">قائمة المسحوبات</a></li>
+                <li><a class="dropdown-item" href="/search-for-pull-money">البحث عن المسحوبات</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="/system-data">بيانات السيستم</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="/add-complaint">اضافة شكوي</a></li>
+                <li><a class="dropdown-item" href="/complaints-list">قائمة الشكاوي</a></li>
+              </ul>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                المنتجات
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="/add">اضافة منتج</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="/create-category">انشاء فئة</a></li>
+                <li><a class="dropdown-item" href="/delete-category">حذف فئة</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" target="_blank" href="/print-products">طباعة المنتجات</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="/create-recover-bill">انشاء فاتورة مرتجعات</a></li>
+                <li><a class="dropdown-item" href="/recover-bill-list">قائمة فواتير المرتجعات</a></li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/cart">العربة
+                <span style="color: #fff;background:#dc3539;" class="badge rounded-pill text-bg-danger"><%= totalProducts %></span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/full-search">البحث الكامل</a>
+            </li>
+            
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                الباركود
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="/search-by-barcode">البحث بالباركود</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" target="_blank" href="/create-barcode">انشاء باركود A4 68 ستيكر</a></li>
+                <li><a class="dropdown-item" target="_blank" href="/create-barcode-a5">انشاء باركود A5 30 ستيكر</a></li>
+              </ul>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+               كروت الصيانة
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="/repaingCard/add-repairing-card">اضافة كرت صيانة</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="/repairing-card-list">قائمة كروت الصيانة</a></li>
+              </ul>
+            </li>
+            
+            <% if(admin.manageAdmins){ %>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  المديرين
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="/admins-list">قائمة المديرين</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="/create-admin">اضافة مدير</a></li>
+                </ul>
+              </li>
+              <% } %>  
+            <li class="nav-item">
+              <span class="text-light nav-link fw-bold">مرحبا: <span class='text-danger'><%= admin.name %></span></span>
+            </li>
+            <li class="nav-item">
+              <a class="btn btn-outline-danger logout" href="/logout">تسجيل الخروج</a>
+            </li>
+          </ul>
+          </form>
+        </div>
+      </div>
+    </nav>
+    <script>
+      let logout = document.querySelector('.logout')
+      logout.addEventListener('click',(e) => {
+      if (confirm("هل تريد تسجيل الخروج") === true) {} 
+      else {
+      e.preventDefault();
+      }})
+    </script>
+    <style>
+      .a-hover:hover{
+        color: #dc3545;
+      }
+    </style>
+  </body>
+</html>

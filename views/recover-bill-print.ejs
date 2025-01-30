@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/recover-bill.css" />
+    <link rel="stylesheet" href="/css/cairo.css" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <title>فاتورة استرجاع</title>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="d-flex justify-content-center row">
+        <div class="col-md-8">
+          <div class="p-3 bg-white rounded">
+            <div class="d-flex justify-content-between">
+              <div class="col-md-6">
+                <h1>فاتورة</h1>
+                <div class="billed">
+                  <span class="ml-1"><%= data.adminName %></span>
+                  <span class="font-weight-bold text-uppercase"
+                    >:تمت بواسطة</span
+                  >
+                </div>
+                <div class="billed">
+                  <span class="font-weight-bold text-uppercase">التاريخ:</span
+                  ><span class="ml-1"
+                    ><%= data.createdAt.toLocaleDateString('ar-EG') %></span
+                  >
+                </div>
+                <div class="billed w-100">
+                  <span class="font-weight-bold text-uppercase"
+                    >رقم الفاتورة:
+                  </span>
+                  <span class="ml-1"><%= data.billNumber %></span>
+                </div>
+              </div>
+              <div class="text-center brand mt-5">
+                <img src="/project_files/imgs/Elfath-Logo.png" />
+                <div class="fs-2 title">الفتح ستور</div>
+
+                <div class="fs-5">01063310981, 01117419902, 01145681652</div>
+              </div>
+            </div>
+            <div style="transform: translateY(-46px)" class=".ttable">
+              <div class="table-responsive">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>المنتج</th>
+                      <th>سعر القطعة</th>
+                      <th>العدد</th>
+                      <th>السعر الاجمالي للمنتج</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% data.recoverBillData.forEach((ele,index)=>{ %>
+                    <tr>
+                      <td><%= ele.name %></td>
+                      <td><%= ele.price%></td>
+                      <td><%= ele.quantity %></td>
+                      <td><%= ele.totalPrice %></td>
+                    </tr>
+                    <% }) %>
+                    <td></td>
+                    <td></td>
+                    <td>
+                      <span class="fw-bold">العدد الاجمالي: </span>
+                      <%= data.totalQuantity %>
+                    </td>
+                    <td>
+                      <span class="fw-bold">السعر الاجمالي:</span>
+                      <%= data.total %>
+                    </td>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

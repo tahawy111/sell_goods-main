@@ -1,0 +1,120 @@
+[{
+  "_id": {
+    "$oid": "629782e521771dd17bb44642"
+  },
+  "password": "$2a$10$KqWnwMpWINAERpBBP1hqFeJA1/Py9RX0k1JyKsmcpWk3ArB57HkwW",
+  "comment": "123465",
+  "manageAdmins": true,
+  "createdAt": {
+    "$date": {
+      "$numberLong": "1654092135667"
+    }
+  },
+  "updatedAt": {
+    "$date": {
+      "$numberLong": "1684752399098"
+    }
+  },
+  "username": "admin123",
+  "name": "admin"
+},{
+  "_id": {
+    "$oid": "62989d08830e21d063f6385f"
+  },
+  "name": "عامر",
+  "username": "amer@@5050",
+  "password": "$2a$10$zPZ.AKe.B4DA50F.RM/g9OTFG7l2GV03U/sN5IAHtAK342ov7eVEm",
+  "comment": "amer@@5050",
+  "createdAt": {
+    "$date": {
+      "$numberLong": "1654168840556"
+    }
+  },
+  "updatedAt": {
+    "$date": {
+      "$numberLong": "1655147066679"
+    }
+  },
+  "__v": 0,
+  "manageAdmins": true
+},{
+  "_id": {
+    "$oid": "62a786bc15505cddfe9ddf39"
+  },
+  "name": "ياسر",
+  "username": "yasser",
+  "password": "$2a$10$oF4UslNJqNOxGF7.McM69eL8vG2WJGPe9wFipZ1DmLa7M5tVxQ9Q.",
+  "comment": "",
+  "manageAdmins": true,
+  "createdAt": {
+    "$date": {
+      "$numberLong": "1655146172872"
+    }
+  },
+  "updatedAt": {
+    "$date": {
+      "$numberLong": "1664146045889"
+    }
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62a78938b7a180212bfed244"
+  },
+  "name": "مؤمن",
+  "username": "moamen",
+  "password": "$2a$10$gFnAPpfnLH/BHBhiXyuXr.8hI7fFm3x8Iq/ZuuLywK2FHMLcenOqK",
+  "comment": "",
+  "manageAdmins": true,
+  "createdAt": {
+    "$date": {
+      "$numberLong": "1655146808795"
+    }
+  },
+  "updatedAt": {
+    "$date": {
+      "$numberLong": "1655147349716"
+    }
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62a78965b7a180212bfed24e"
+  },
+  "name": "elfath",
+  "username": "elfath",
+  "password": "$2a$10$gquFTfOkBjNJiv7G8LF2S.0gx./Bz5MFU6bQmP.HOv8RyKDZ322qC",
+  "comment": "",
+  "manageAdmins": true,
+  "createdAt": {
+    "$date": {
+      "$numberLong": "1655146853422"
+    }
+  },
+  "updatedAt": {
+    "$date": {
+      "$numberLong": "1655146853422"
+    }
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62aa48d5b7771fa3d4e4953c"
+  },
+  "name": "خالد محمد",
+  "username": "Khaled",
+  "password": "$2a$10$wdfRcLVo8aZ7qGT1OxWgS.qz7QH6T5VEx9Pdottbjn5h4fSwiGpV6",
+  "comment": "y@sser582",
+  "manageAdmins": true,
+  "createdAt": {
+    "$date": {
+      "$numberLong": "1655326933846"
+    }
+  },
+  "updatedAt": {
+    "$date": {
+      "$numberLong": "1679326949788"
+    }
+  },
+  "__v": 0
+}]

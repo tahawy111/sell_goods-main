@@ -1,0 +1,42 @@
+<%- include('./partials/head.ejs') %>
+
+<div
+  style="height: 100vh"
+  class="d-flex justify-content-center align-items-center"
+>
+  <h1>فقط اضغط هنا و اعمل scan 📡</h1>
+</div>
+<a class="d-none barcode-handle-details" href=""></a>
+
+<script>
+  const barcodeHandleDetails = document.querySelector(
+    '.barcode-handle-details'
+  );
+  let barcode = '';
+  let interval;
+
+  document.addEventListener('keydown', (evt) => {
+    if (interval) {
+      clearInterval(interval);
+    }
+
+    if (evt.code == 'Enter') {
+      if (barcode) handleBarcode(barcode);
+      barcode = '';
+      return;
+    }
+
+    if (evt.code != 'Shift') barcode += evt.key;
+
+    interval = setInterval(() => {
+      barcode = '';
+    }, 20);
+
+    function handleBarcode(scanned_barcode) {
+      barcodeHandleDetails.href = `/details2/${scanned_barcode}`;
+      barcodeHandleDetails.click();
+    }
+  });
+</script>
+
+<%- include('./partials/footer.ejs') %>

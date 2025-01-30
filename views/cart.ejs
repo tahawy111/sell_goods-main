@@ -1,0 +1,235 @@
+<%- include('./partials/head.ejs') %> <% if (admin.cart.selectedProduct) { %> <%
+if (admin.cart.userDealer) { %>
+<h2 class="border border-bottom border-top-0 text-center mt-1">
+  بيانات العميل
+</h2>
+
+<h3>اسم العميل: <%= admin.cart.userDealer.dealerName %></h3>
+<h3>عنوان العميل: <%= admin.cart.userDealer.address %></h3>
+<h3>
+  اسم الشركة: <%= admin.cart.userDealer.companyName
+  ?admin.cart.userDealer.companyName : "لايوجد" %>
+</h3>
+<h3>رقم الهاتف: <%= admin.cart.userDealer.phoneNumber %></h3>
+<h3>
+  رقم الهاتف الارضي: <%= admin.cart.userDealer.telephoneFix ?
+  admin.cart.userDealer.telephoneFix : "لايوجد" %>
+</h3>
+<h1 class="border border-bottom text-center"></h1>
+
+<% } %>
+<div class="container-fluid">
+  <div class="row my-4">
+    <div class="col-lg-12">
+      <div class="table-responsive me-5">
+        <table class="table table-bordered text-center my-3">
+          <thead>
+            <tr class="table-dark">
+              <th>#</th>
+              <th>اسم المنتج</th>
+              <th>العدد</th>
+              <th>سعر القطعة</th>
+              <th>السعر الاجمالي</th>
+            </tr>
+          </thead>
+
+          <tbody style="vertical-align: middle">
+            <% admin.cart.selectedProduct.forEach((ele,index)=>{ %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td>
+                <a
+                  class="text-decoration-none a-hover"
+                  target="_blank"
+                  href="/details/<%= ele._id %>"
+                  ><%= ele.name %></a
+                >
+                <a
+                  href="/cart/deleteProduct/<%= index %>"
+                  class="btn btn-danger float-end"
+                  ><i class="fa-solid fa-trash"></i>
+                </a>
+              </td>
+              <td>
+                <% if (ele.quantity <= 1) { %>
+                <a href="" class="btn me-2 disabled"
+                  ><i class="fa-solid fa-square-minus fs-4"></i>
+                </a>
+                <% }else { %>
+                <a href="/cart/decProduct/<%= index %>" class="btn me-2">
+                  <i class="fa-solid fa-square-minus fs-4"></i>
+                </a>
+                <% } %> <%= ele.quantity %> <% if (ele.quantity >= ele.
+                qtyInStore ) { %>
+
+                <a href="" class="btn ms-2 disabled"
+                  ><i class="fa-solid fa-square-plus fs-4"> </i>
+                </a>
+
+                <% }else{ %>
+                <a href="/cart/incProduct/<%= index %>" class="btn ms-2">
+                  <i class="fa-solid fa-square-plus fs-4"></i>
+                </a>
+                <%}%>
+              </td>
+              <td><%= ele.priceOfOne %></td>
+              <td>
+                <form action="/cart/edit-single-price" method="post">
+                  <input
+                    type="number"
+                    class="form-control form-control-sm mb-1"
+                    name="totalPrice"
+                    value="<%= ele.price %>"
+                  />
+                  <input
+                    type="hidden"
+                    name="productId"
+                    value="<%= ele._id %>"
+                  />
+                  <button type="submit" class="btn btn-warning btn-sm">
+                    تحديث
+                  </button>
+                </form>
+              </td>
+            </tr>
+            <% }) %>
+            <tr>
+              <td colspan="2"></td>
+              <td class="fw-bold">
+                العدد الكامل: <%= admin.cart.totalQuantity %>
+              </td>
+              <td></td>
+              <td>السعر الاجمالي: <%= admin.cart.totalPrice %></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between">
+          <a href="/cart/sell/deleteAll" class="btn btn-danger delAll"
+            >حذف الكل
+          </a>
+          <a href="/cart/sell/newBill" class="btn btn-success">فاتورة جديدة</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="d-flex justify-content-around">
+  <div class="card" style="width: 18rem">
+    <div class="card-body">
+      <h5 class="card-title">تعديل السعر الاجمالي</h5>
+      <form action="/cart/general-discount" method="post">
+        <input
+          type="number"
+          class="form-control mb-2"
+          name="totalDiscount"
+          value="<%= admin.cart.totalPrice %>"
+        />
+        <button type="submit" class="btn btn-primary">تطبيق</button>
+      </form>
+    </div>
+  </div>
+  
+  <div class="card" style="width: 18rem">
+    <div class="card-body">
+      <h5 class="card-title">حساب الباقي</h5>
+      <form method="post">
+        <label for="the-paid-amount" class="mb-1">المبلغ المدفوع من العميل</label>
+        <input
+          type="number"
+          class="form-control mb-2"
+          name="the-paid-amount"
+          value=""
+          placeholder="المبلغ المدفوع من العميل"
+        />
+      </form>
+      <h5 class="mt-2 amount-value"><h5>
+    </div>
+  </div>
+</div>
+
+<script>
+  const delAll = document.querySelector(`.delAll`);
+  delAll.addEventListener('click', (e) => {
+    if (
+      confirm('هل انت متأكد من انك تريد حذف جميع المنتجات من العربة') === true
+    ) {
+    } else {
+      e.preventDefault();
+    }
+  });
+
+
+  // calculate the amount
+  const ammountValue = document.querySelector(".amount-value")
+  const paidAmountInput = document.querySelector("input[name='the-paid-amount']")
+  const totalAmountInput = document.querySelector("input[name='totalDiscount']").value
+
+
+
+paidAmountInput.addEventListener("keyup",(element) => {
+//   console.log({ammountValue,
+// paidAmountInput: paidAmountInput.value,
+// totalAmountInput});
+if(!paidAmountInput.value){
+  ammountValue.innerHTML = `المبلغ المتبقي: `
+  return
+}
+ammountValue.innerHTML = `المبلغ المتبقي: ${+paidAmountInput.value - +totalAmountInput}`
+  
+})
+
+
+</script>
+
+<% if (typeof userId === "undefined") { %>
+
+  <a class="d-none barcode-handle-sell" href=""></a>
+  
+  <% }else{ %>
+  
+  <form action="/cart2" method="post">
+    <input type="hidden" name="userId" value="<%= userId %>" />
+    <input type="hidden" name="barcode" />
+  </form>
+  
+  <% } %>
+  
+  <script>
+    const barcodeHandleSell = document.querySelector('.barcode-handle-sell');
+    const dealerBarcodeHandle = document.querySelector(`input[name="barcode"]`);
+    const barcodeForm = document.querySelector(`form[action='/cart2']`);
+    let barcode = '';
+    let interval;
+  
+    document.addEventListener('keydown', (evt) => {
+      if (interval) {
+        clearInterval(interval);
+      }
+  
+      if (evt.code == 'Enter') {
+        if (barcode) handleBarcode(barcode);
+        barcode = '';
+        return;
+      }
+  
+      if (evt.code != 'Shift') barcode += evt.key;
+  
+      interval = setInterval(() => {
+        barcode = '';
+      }, 20);
+  
+      function handleBarcode(scanned_barcode) {
+        if (barcodeHandleSell) {
+          barcodeHandleSell.href = `/cart2/${scanned_barcode}`;
+          barcodeHandleSell.click();
+        } else {
+          dealerBarcodeHandle.value = scanned_barcode;
+          barcodeForm.submit();
+        }
+      }
+    });
+  </script>
+
+<% }else{ %> لايوجد منتجات <% } %> <%- include('./partials/footer.ejs') %>

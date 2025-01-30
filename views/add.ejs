@@ -1,0 +1,105 @@
+<%- include('./partials/head.ejs') %>
+
+<div class="row w-100">
+  <div class="col-lg-6 mx-auto mt-4">
+    <div class="card shadow">
+      <div class="card-header bg-primary">
+        <h3 class="text-light">اضافة منتج جديد</h3>
+      </div>
+      <div class="card-body p-4">
+        <form
+          action="/add"
+          method="post"
+          id="add-form"
+          enctype="multipart/form-data"
+        >
+          <div class="mb-3">
+            <label class="fs-5" for="name">الاسم</label>
+            <input
+              type="text"
+              name="name"
+              class="form-control form-control-lg"
+              placeholder="ادخل اسم المنتج"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="price">السعر</label>
+            <input
+              type="number"
+              name="price"
+              class="form-control form-control-lg"
+              placeholder="ادخل السعر"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="dealerPrice">السعر الديلر</label>
+            <input
+              type="number"
+              name="dealerPrice"
+              class="form-control form-control-lg"
+              placeholder="ادخل السعر الديلر"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="wholesale">السعر الجملة</label>
+            <input
+              type="number"
+              name="wholesale"
+              class="form-control form-control-lg"
+              placeholder="ادخل السعر الجملة"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="barcode">الباركود</label>
+            <input
+              type="text"
+              name="barcode"
+              class="form-control form-control-lg"
+              placeholder="ادخل الباركود"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label class="fs-5" for="quantity">العدد</label>
+            <input
+              type="number"
+              name="quantity"
+              class="form-control form-control-lg"
+              placeholder="ادخل العدد"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="category">الفئة</label>
+            <select name="category" class="form-control form-control-lg">
+              <% category.forEach((ele) => { %>
+              <option value="<%= ele.category %>"><%= ele.category %></option>
+
+              <% }) %>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="image" class="fs-5" class="form-label"
+              >اختر الصورة</label
+            >
+            <input
+              type="file"
+              name="image"
+              class="form-control form-control-lg"
+            />
+          </div>
+          <input
+            type="submit"
+            name="submit"
+            value="اضافة منتج"
+            class="btn btn-primary btn-lg"
+          />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('./partials/footer.ejs') %>

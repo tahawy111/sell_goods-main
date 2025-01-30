@@ -1,0 +1,113 @@
+<%- include('./partials/head.ejs') %>
+
+<div class="row w-100">
+  <div class="col-lg-6 mx-auto mt-4">
+    <div class="card shadow">
+      <div class="card-header bg-dark mb-4">
+        <h3 class="text-light">Edit Admin</h3>
+      </div>
+      <%- include('./partials/message') %>
+      <div class="card-body p-4">
+        <form action="/update-admin/<%= data._id %> " method="post">
+          <div class="mb-3">
+            <label class="fs-5" for="name">Enter Your Name</label>
+            <input
+              type="text"
+              name="name"
+              class="form-control form-control-lg"
+              placeholder="Enter Name"
+              value="<%= data.name %>"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="username">Username</label>
+            <input
+              type="text"
+              name="username"
+              class="form-control form-control-lg"
+              placeholder="Enter Username"
+              value="<%= data.username %>"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="password">Password</label>
+            <input
+              type="password"
+              name="password"
+              class="form-control form-control-lg"
+              placeholder="Enter New Password"
+              value="<%=
+            data.password %>"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="password2">Password</label>
+            <input
+              type="password"
+              name="password2"
+              class="form-control form-control-lg"
+              placeholder="Confirm New Password"
+              value="<%=
+            data.password %>"
+            />
+          </div>
+          <div class="form-floating mb-3">
+            <textarea
+              class="form-control"
+              placeholder="Leave a comment here"
+              name="comment"
+              id="floatingTextarea2"
+              style="height: 100px"
+            >
+<%= data.comment %></textarea
+            >
+            <label for="floatingTextarea2">Comment</label>
+          </div>
+
+
+          <div class="border-dark border-top border-bottom my-2 py-2">
+            <h4 class="text-center">Permissions</h4>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input check" name="manageAdmins" type="checkbox" <%= data.manageAdmins ? "checked" : "" %> id="MA">
+            <label class="form-check-label" for="MA">
+              Manage Admins
+            </label>
+          </div>
+          </div>
+          <br />
+          <br />
+
+
+
+
+          <input type="submit" value="Update" class="btn btn-dark btn-lg" />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let check = document.querySelector('.check');
+  check.addEventListener('change',(e) => {
+    if(check.checked === true){
+      check.setAttribute("value",true)
+      check.setAttribute('checked',"")
+    }
+    else{
+      check.setAttribute("value",false)
+      check.removeAttribute('checked');
+    }
+  }
+  )
+  window.onload = function () {
+    if (check.checked === true) {
+    check.value = true;
+  } else {
+    check.value = false;      
+  }
+};
+</script>
+
+<%- include('./partials/footer.ejs') %>

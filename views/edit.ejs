@@ -1,0 +1,120 @@
+<%- include('./partials/head.ejs') %>
+
+<div class="row w-100">
+  <div class="col-lg-6 mx-auto mt-4">
+    <div class="card shadow">
+      <div class="card-header bg-primary">
+        <h3 class="text-light">تعديل المنتج (<%= data.name %>)</h3>
+      </div>
+      <div class="card-body p-4">
+        <form
+          action="/update/<%= data._id %>"
+          method="post"
+          id="edit-form"
+          enctype="multipart/form-data"
+        >
+          <div class="mb-3">
+            <label class="fs-5" for="name">الاسم</label>
+            <input
+              type="text"
+              name="name"
+              value="<%= data.name %>"
+              class="form-control form-control-lg"
+              placeholder="ادخل الاسم"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="price">السعر</label>
+            <input
+              type="number"
+              name="price"
+              value="<%= data.price %>"
+              class="form-control form-control-lg"
+              placeholder="ادخل السعر"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="dealerPrice">السعر الديلر</label>
+            <input
+              type="number"
+              name="dealerPrice"
+              value="<%= data.dealerPrice %>"
+              class="form-control form-control-lg"
+              placeholder="ادخل السعر الديلر"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="wholesale">السعر الجملة</label>
+            <input
+              type="number"
+              name="wholesale"
+              value="<%= data.wholesale %>"
+              class="form-control form-control-lg"
+              placeholder="ادخل السعر الجملة"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label class="fs-5" for="quantity">العدد</label>
+            <input
+              type="number"
+              name="quantity"
+              value="<%= data.quantity %>"
+              class="form-control form-control-lg"
+              placeholder="ادخل العدد"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="barcode">الباركود</label>
+            <input
+              type="text"
+              name="barcode"
+              value="<%= data.barcode %>"
+              class="form-control form-control-lg"
+              placeholder="ادخل الباركود"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label class="fs-5" for="category">الفئة</label>
+            <select
+              value="<%= data.category %>"
+              name="category"
+              class="form-control form-control-lg"
+            >
+              <% category.forEach((ele) => { %>
+              <option <%= ele.category === data.category && "selected"  %>  value="<%= ele.category %>"><%= ele.category %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="image" class="fs-5" class="form-label"
+              >اختر صورة من الجهاز</label
+            >
+            <input
+              type="file"
+              name="image"
+              class="form-control form-control-lg"
+            />
+            <input type="hidden" name="old_image" value="<%= data.image %>" />
+          </div>
+          <div class="d-flex flex-column">
+            <img
+              src="/uploads/images/<%= data.image %>"
+              class="img-thumbnail"
+              id="old_image"
+            />
+            <input
+              type="submit"
+              value="تحديث"
+              class="btn btn-primary btn-lg"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('./partials/footer.ejs') %>
