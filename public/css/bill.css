@@ -25,9 +25,9 @@
 }
 
 .barnd-container img {
-  position: absolute;
+  /* position: absolute; */
   width: 4.5cm;
-  top: -30px;
+  top: 30px;
 }
 
 .barnd-container {
@@ -38,7 +38,7 @@
 
 .barnd-container .barnd-name {
   font-size: 28px;
-  margin-top: 3cm;
+  margin-top: 0.2cm;
   text-align: center;
 }
 .barnd-container .phone-numbers {
