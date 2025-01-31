@@ -13,7 +13,7 @@ const ProductModel = require("../models/productModel");
 
 router.get("/cart/:id", ensureAuthenticated, (req, res, next) => {
   const { id } = req.params;
-
+  const prevPageUrl = `/${req.headers.referer.split("/")[3]}`
   const cartId = req.user.id;
 
   ProductModel.findById(id)
@@ -46,7 +46,7 @@ router.get("/cart/:id", ensureAuthenticated, (req, res, next) => {
             newCart
               .save()
               .then((doc) => {
-                res.redirect("/cart");
+                res.redirect(prevPageUrl === "/sell-weight-products" && result.isByWeight ? "/sell-weight-products" : "/cart");
               })
               .catch((err) => console.log(err));
           }
@@ -64,7 +64,7 @@ router.get("/cart/:id", ensureAuthenticated, (req, res, next) => {
                 cart.selectedProduct[indexOfProduct].quantity >=
                 cart.selectedProduct[indexOfProduct].qtyInStore
               ) {
-                res.redirect("/cart");
+                res.redirect(prevPageUrl === "/sell-weight-products" && result.isByWeight ? "/sell-weight-products" : "/cart");
               } else {
                 console.log(cart.selectedProduct[indexOfProduct].quantity);
                 console.log(cart.selectedProduct[indexOfProduct].qtyInStore);
@@ -81,7 +81,7 @@ router.get("/cart/:id", ensureAuthenticated, (req, res, next) => {
 
                   CartModel.updateOne({ _id: cartId }, { $set: cart })
                     .then((doc) => {
-                      res.redirect("/cart");
+                      res.redirect(prevPageUrl === "/sell-weight-products" && result.isByWeight ? "/sell-weight-products" : "/cart");
                     })
                     .catch((err) => console.log(err));
                 } else {
@@ -97,7 +97,7 @@ router.get("/cart/:id", ensureAuthenticated, (req, res, next) => {
 
                   CartModel.updateOne({ _id: cartId }, { $set: cart })
                     .then((doc) => {
-                      res.redirect("/cart");
+                      res.redirect(prevPageUrl === "/sell-weight-products" && result.isByWeight ? "/sell-weight-products" : "/cart");
                     })
                     .catch((err) => console.log(err));
                 }
@@ -121,7 +121,7 @@ router.get("/cart/:id", ensureAuthenticated, (req, res, next) => {
                 // update in mongodb
                 CartModel.updateOne({ _id: cartId }, { $set: cart })
                   .then((doc) => {
-                    res.redirect("/cart");
+                    res.redirect(prevPageUrl === "/sell-weight-products" && result.isByWeight ? "/sell-weight-products" : "/cart");
                   })
                   .catch((err) => console.log(err));
               } else {
@@ -137,7 +137,7 @@ router.get("/cart/:id", ensureAuthenticated, (req, res, next) => {
                 // update in mongodb
                 CartModel.updateOne({ _id: cartId }, { $set: cart })
                   .then((doc) => {
-                    res.redirect("/cart");
+                    res.redirect(prevPageUrl === "/sell-weight-products" && result.isByWeight ? "/sell-weight-products" : "/cart");
                   })
                   .catch((err) => console.log(err));
               }
@@ -579,7 +579,7 @@ router.get("/cart/sell/newBill", ensureAuthenticated, (req, res) => {
   req.user.cart.selectedProduct.forEach((ele) => {
     ProductModel.findOne({ _id: ele._id })
       .then((doc) => {
-        doc.quantity = +doc.quantity - +ele.quantity;
+        doc.quantity = +doc.quantity - (+ele.quantity / 1000);
         ProductModel.findByIdAndUpdate(ele._id, {
           quantity: doc.quantity,
         })

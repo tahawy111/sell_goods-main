@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/bill.css" />
     <link rel="stylesheet" href="/css/cairo.css" />
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="icon" href="/project_files/imgs/Shopping.png" />
     <title>فاتورة مبيعات</title>
   </head>
   <body>
@@ -53,7 +54,7 @@
             <tr>
               <th>الأسم</th>
               <th></th>
-              <th>العدد</th>
+              <th>العدد أوالوزن</th>
               <th>السعر</th>
             </tr>
           </thead>
@@ -61,7 +62,10 @@
             <% data.selectedProduct.forEach((ele,index)=>{ %>
             <tr>
               <td colspan="2"><%= ele.name %></td>
-              <td style="max-width: 200px"><%= ele.quantity %></td>
+              <td style="max-width: 200px">
+                <% if(ele.isByWeight){ %> <%= ele.quantity %> <br />
+                جرام <% } else{ %> <%= ele.quantity %> <%}%>
+              </td>
               <td style="max-width: 200px"><%= ele.price %></td>
             </tr>
             <% }) %>
@@ -72,7 +76,9 @@
         <div class="me-2">
           السعر الاجمالي: <b><%= data.totalPrice %></b> جنيه
         </div>
-        <span class="bill-number" style="display: none;"><%= data.billNumber %></span>
+        <span class="bill-number" style="display: none"
+          ><%= data.billNumber %></span
+        >
 
         <!-- <div class="hr"></div>
         <div>

@@ -73,6 +73,51 @@ router.get("/", ensureAuthenticated, (req, res) => {
   }
 });
 
+router.get("/sell-weight-products", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+  const { category } = req.query;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  if (category && category != "الكل") {
+    CategoryModel.find()
+      .then((doc) => {
+        ProductModel.find({ category, isByWeight: true })
+          .then((result) => {
+            res.render("sell-weight-products", {
+              title: "بيع منتجات بالوزن",
+              data: result,
+              category: doc,
+              admin: req.user,
+              totalProducts,
+            });
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+  } else {
+    CategoryModel.find()
+      .then((doc) => {
+        ProductModel.find({ isByWeight: true })
+          .then((result) => {
+            res.render("sell-weight-products", {
+              title: "بيع منتجات بالوزن",
+              data: result,
+              category: doc,
+              admin: req.user,
+              totalProducts,
+            });
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+  }
+});
+
 router.post("/add", ensureAuthenticated, upload, (req, res) => {
   const product = new ProductModel({
     name: req.body.name,
@@ -171,7 +216,6 @@ router.post("/update/:id", ensureAuthenticated, upload, (req, res) => {
   }
 
   console.log(req.body);
-  
 
   // here we added the new data
   ProductModel.findByIdAndUpdate(req.params.id, {
@@ -576,7 +620,7 @@ router.post("/recover/edit/:id", ensureAuthenticated, (req, res) => {
     $push: { recoverBillData: recoverbill },
     $inc: {
       total: totalPrice,
-      totalQuantity: quantity
+      totalQuantity: quantity,
     },
   })
     .then((result) => {
@@ -662,13 +706,15 @@ router.get(
     }
 
     RecoverBillListModel.findById(req.params.listId).then((result) => {
-      const deletedProduct = result.recoverBillData.find((p) => p._id.toString() === req.params.id)
+      const deletedProduct = result.recoverBillData.find(
+        (p) => p._id.toString() === req.params.id
+      );
       result.recoverBillData = result.recoverBillData.filter(
         (p) => p._id.toString() !== req.params.id
       );
-      result.total -= deletedProduct.totalPrice
-      result.totalQuantity -= deletedProduct.quantity
-      
+      result.total -= deletedProduct.totalPrice;
+      result.totalQuantity -= deletedProduct.quantity;
+
       RecoverBillListModel.findByIdAndUpdate(req.params.listId, result).then(
         () => {
           res.redirect(`/recover-bill/edit/${req.params.listId}`);
@@ -730,15 +776,21 @@ router.post(
         result.recoverBillData.find((p) => p._id.toString() === req.params.id)
       );
 
-      result.total = (result.total - (result.recoverBillData[indexOfRecoverProduct].price * result.recoverBillData[indexOfRecoverProduct].quantity)) + (price * quantity);
+      result.total =
+        result.total -
+        result.recoverBillData[indexOfRecoverProduct].price *
+          result.recoverBillData[indexOfRecoverProduct].quantity +
+        price * quantity;
 
-      result.totalQuantity = (result.totalQuantity - result.recoverBillData[indexOfRecoverProduct].quantity) + quantity;
+      result.totalQuantity =
+        result.totalQuantity -
+        result.recoverBillData[indexOfRecoverProduct].quantity +
+        quantity;
 
       result.recoverBillData[indexOfRecoverProduct].name = name;
       result.recoverBillData[indexOfRecoverProduct].price = price;
       result.recoverBillData[indexOfRecoverProduct].quantity = quantity;
       result.recoverBillData[indexOfRecoverProduct].totalPrice = totalPrice;
-
 
       RecoverBillListModel.findByIdAndUpdate(req.params.listId, result).then(
         () => {
@@ -790,7 +842,7 @@ router.get("/recover-bill/create", ensureAuthenticated, (req, res) => {
 
     newRecoverBillList.save().then((result) => {
       RecoverBillModel.remove()
-        .then((result) => { })
+        .then((result) => {})
         .catch((err) => console.log(err));
       res.render("success-page", {
         title: "تمت اضافة فاتورة مرتجعات",
