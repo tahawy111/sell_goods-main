@@ -1,17 +1,17 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const CartModel = require('../models/CartModel');
-const BillModel = require('../models/BillModel');
-const UserDealerModel = require('../models/UserDealerModel');
+const CartModel = require("../models/CartModel");
+const BillModel = require("../models/BillModel");
+const UserDealerModel = require("../models/UserDealerModel");
 
 const {
   ensureAuthenticated,
   forwardAuthenticated,
   isAdmin,
-} = require('../config/auth');
-const ProductModel = require('../models/productModel');
+} = require("../config/auth");
+const ProductModel = require("../models/productModel");
 
-router.get('/cart/:id', ensureAuthenticated, (req, res, next) => {
+router.get("/cart/:id", ensureAuthenticated, (req, res, next) => {
   const { id } = req.params;
 
   const cartId = req.user.id;
@@ -26,11 +26,12 @@ router.get('/cart/:id', ensureAuthenticated, (req, res, next) => {
       const qtyInStore = +result.quantity;
       const newProduct = {
         _id: id,
-        price: price,
+        price: result.isByWeight ? (1/1000) * price : price,
         priceOfOne: price,
         name,
         quantity: 1,
         qtyInStore,
+        isByWeight: result.isByWeight,
       };
       CartModel.findById(cartId)
         .then((cart) => {
@@ -38,14 +39,14 @@ router.get('/cart/:id', ensureAuthenticated, (req, res, next) => {
             const newCart = CartModel({
               _id: cartId,
               totalQuantity: 1,
-              totalPrice: price,
+              totalPrice: result.isByWeight ? (1/1000) * price : price,
               selectedProduct: [newProduct],
               dealer: false,
             });
             newCart
               .save()
               .then((doc) => {
-                res.redirect('/cart');
+                res.redirect("/cart");
               })
               .catch((err) => console.log(err));
           }
@@ -63,7 +64,7 @@ router.get('/cart/:id', ensureAuthenticated, (req, res, next) => {
                 cart.selectedProduct[indexOfProduct].quantity >=
                 cart.selectedProduct[indexOfProduct].qtyInStore
               ) {
-                res.redirect('/cart');
+                res.redirect("/cart");
               } else {
                 console.log(cart.selectedProduct[indexOfProduct].quantity);
                 console.log(cart.selectedProduct[indexOfProduct].qtyInStore);
@@ -80,7 +81,7 @@ router.get('/cart/:id', ensureAuthenticated, (req, res, next) => {
 
                   CartModel.updateOne({ _id: cartId }, { $set: cart })
                     .then((doc) => {
-                      res.redirect('/cart');
+                      res.redirect("/cart");
                     })
                     .catch((err) => console.log(err));
                 } else {
@@ -96,7 +97,7 @@ router.get('/cart/:id', ensureAuthenticated, (req, res, next) => {
 
                   CartModel.updateOne({ _id: cartId }, { $set: cart })
                     .then((doc) => {
-                      res.redirect('/cart');
+                      res.redirect("/cart");
                     })
                     .catch((err) => console.log(err));
                 }
@@ -120,7 +121,7 @@ router.get('/cart/:id', ensureAuthenticated, (req, res, next) => {
                 // update in mongodb
                 CartModel.updateOne({ _id: cartId }, { $set: cart })
                   .then((doc) => {
-                    res.redirect('/cart');
+                    res.redirect("/cart");
                   })
                   .catch((err) => console.log(err));
               } else {
@@ -136,7 +137,7 @@ router.get('/cart/:id', ensureAuthenticated, (req, res, next) => {
                 // update in mongodb
                 CartModel.updateOne({ _id: cartId }, { $set: cart })
                   .then((doc) => {
-                    res.redirect('/cart');
+                    res.redirect("/cart");
                   })
                   .catch((err) => console.log(err));
               }
@@ -147,7 +148,7 @@ router.get('/cart/:id', ensureAuthenticated, (req, res, next) => {
     })
     .catch((err) => console.log(err));
 });
-router.post('/cart', ensureAuthenticated, (req, res, next) => {
+router.post("/cart", ensureAuthenticated, (req, res, next) => {
   const { id } = req.body;
   const dealerUserId = req.body.userId;
   const cartId = req.user.id;
@@ -162,16 +163,19 @@ router.post('/cart', ensureAuthenticated, (req, res, next) => {
 
       ProductModel.findById(id)
         .then((result) => {
+          console.log(result.isByWeight ? (1/1000) * price : price);
+          
           const name = result.name;
           const qtyInStore = +result.quantity;
           const price = +result.dealerPrice;
           const newProduct = {
             _id: id,
-            price,
+            price: result.isByWeight ? (1/1000) * price : price,
             priceOfOne: price,
             name,
             quantity: 1,
             qtyInStore,
+            isByWeight: result.isByWeight,
           };
 
           CartModel.findById(cartId)
@@ -196,7 +200,7 @@ router.post('/cart', ensureAuthenticated, (req, res, next) => {
                 newCart
                   .save()
                   .then((doc) => {
-                    res.redirect('/search-by-barcode');
+                    res.redirect("/search-by-barcode");
                   })
                   .catch((err) => console.log(err));
               }
@@ -222,7 +226,7 @@ router.post('/cart', ensureAuthenticated, (req, res, next) => {
 
                   CartModel.updateOne({ _id: cartId }, { $set: cart })
                     .then((doc) => {
-                      res.redirect('/cart');
+                      res.redirect("/cart");
                     })
                     .catch((err) => console.log(err));
                 }
@@ -234,7 +238,7 @@ router.post('/cart', ensureAuthenticated, (req, res, next) => {
     })
     .catch((err) => console.log(err));
 });
-router.post('/cart2', ensureAuthenticated, (req, res, next) => {
+router.post("/cart2", ensureAuthenticated, (req, res, next) => {
   const { barcode } = req.body;
   const dealerUserId = req.body.userId;
   const cartId = req.user.id;
@@ -249,17 +253,19 @@ router.post('/cart2', ensureAuthenticated, (req, res, next) => {
 
       ProductModel.findOne({ barcode: barcode })
         .then((result) => {
+          
           const id = result._id;
           const name = result.name;
           const qtyInStore = +result.quantity;
           const price = +result.dealerPrice;
           const newProduct = {
             _id: id,
-            price,
+            price: result.isByWeight ? (1/1000) * price : price,
             priceOfOne: price,
             name,
             quantity: 1,
             qtyInStore,
+            isByWeight: result.isByWeight,
           };
 
           CartModel.findById(cartId)
@@ -284,7 +290,7 @@ router.post('/cart2', ensureAuthenticated, (req, res, next) => {
                 newCart
                   .save()
                   .then((doc) => {
-                    res.redirect('/cart');
+                    res.redirect("/cart");
                   })
                   .catch((err) => console.log(err));
               }
@@ -310,7 +316,7 @@ router.post('/cart2', ensureAuthenticated, (req, res, next) => {
 
                   CartModel.updateOne({ _id: cartId }, { $set: cart })
                     .then((doc) => {
-                      res.redirect('/cart');
+                      res.redirect("/cart");
                     })
                     .catch((err) => console.log(err));
                 }
@@ -323,15 +329,14 @@ router.post('/cart2', ensureAuthenticated, (req, res, next) => {
     .catch((err) => console.log(err));
 });
 
-router.get('/cart2/:barcode', ensureAuthenticated, (req, res, next) => {
+router.get("/cart2/:barcode", ensureAuthenticated, (req, res, next) => {
   const { barcode } = req.params;
   const cartId = req.user.id;
   console.log(barcode);
-  
 
   ProductModel.findOne({ barcode: barcode })
     .then((result) => {
-      console.log(result)
+      console.log(result);
       const name = result.name;
       const price = +result.price;
 
@@ -342,7 +347,7 @@ router.get('/cart2/:barcode', ensureAuthenticated, (req, res, next) => {
 
       const newProduct = {
         _id: id,
-        price: price,
+        price: result.isByWeight ? (1/1000) * price : price,
         priceOfOne: price,
         name,
         quantity: 1,
@@ -354,14 +359,14 @@ router.get('/cart2/:barcode', ensureAuthenticated, (req, res, next) => {
             const newCart = CartModel({
               _id: cartId,
               totalQuantity: 1,
-              totalPrice: price,
+              totalPrice: result.isByWeight ? (1/1000) * price : price,
               selectedProduct: [newProduct],
               dealer: false,
             });
             newCart
               .save()
               .then((doc) => {
-                res.redirect('/cart');
+                res.redirect("/cart");
               })
               .catch((err) => console.log(err));
           }
@@ -382,7 +387,7 @@ router.get('/cart2/:barcode', ensureAuthenticated, (req, res, next) => {
                 cart.selectedProduct[indexOfProduct].quantity >=
                 cart.selectedProduct[indexOfProduct].qtyInStore
               ) {
-                res.redirect('/cart');
+                res.redirect("/cart");
               } else {
                 if (cart.dealer === true) {
                   cart.selectedProduct[indexOfProduct].quantity =
@@ -397,7 +402,7 @@ router.get('/cart2/:barcode', ensureAuthenticated, (req, res, next) => {
 
                   CartModel.updateOne({ _id: cartId }, { $set: cart })
                     .then((doc) => {
-                      res.redirect('/cart');
+                      res.redirect("/cart");
                     })
                     .catch((err) => console.log(err));
                 } else {
@@ -413,7 +418,7 @@ router.get('/cart2/:barcode', ensureAuthenticated, (req, res, next) => {
 
                   CartModel.updateOne({ _id: cartId }, { $set: cart })
                     .then((doc) => {
-                      res.redirect('/cart');
+                      res.redirect("/cart");
                     })
                     .catch((err) => console.log(err));
                 }
@@ -437,7 +442,7 @@ router.get('/cart2/:barcode', ensureAuthenticated, (req, res, next) => {
                 // update in mongodb
                 CartModel.updateOne({ _id: cartId }, { $set: cart })
                   .then((doc) => {
-                    res.redirect('/cart');
+                    res.redirect("/cart");
                   })
                   .catch((err) => console.log(err));
               } else {
@@ -453,7 +458,7 @@ router.get('/cart2/:barcode', ensureAuthenticated, (req, res, next) => {
                 // update in mongodb
                 CartModel.updateOne({ _id: cartId }, { $set: cart })
                   .then((doc) => {
-                    res.redirect('/cart');
+                    res.redirect("/cart");
                   })
                   .catch((err) => console.log(err));
               }
@@ -465,26 +470,26 @@ router.get('/cart2/:barcode', ensureAuthenticated, (req, res, next) => {
     .catch((err) => console.log(err));
 });
 
-router.get('/cart', ensureAuthenticated, (req, res, next) => {
+router.get("/cart", ensureAuthenticated, (req, res, next) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
-    totalProducts = '';
-    res.redirect('/search-by-barcode');
+    totalProducts = "";
+    res.redirect("/search-by-barcode");
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
 
   const userCart = req.user.cart;
 
-  res.render('cart', {
-    title: 'Cart',
+  res.render("cart", {
+    title: "Cart",
     totalProducts,
     admin: req.user,
   });
 });
 
-router.get('/cart/incProduct/:index', ensureAuthenticated, (req, res) => {
+router.get("/cart/incProduct/:index", ensureAuthenticated, (req, res) => {
   const { index } = req.params;
   const userCart = req.user.cart;
   const productPrice = userCart.selectedProduct[index].priceOfOne;
@@ -501,11 +506,11 @@ router.get('/cart/incProduct/:index', ensureAuthenticated, (req, res) => {
 
   CartModel.updateOne({ _id: userCart._id }, { $set: userCart })
     .then((doc) => {
-      res.redirect('/cart');
+      res.redirect("/cart");
     })
     .catch((err) => console.log(err));
 });
-router.get('/cart/decProduct/:index', ensureAuthenticated, (req, res) => {
+router.get("/cart/decProduct/:index", ensureAuthenticated, (req, res) => {
   const { index } = req.params;
   const userCart = req.user.cart;
   const productPrice = userCart.selectedProduct[index].priceOfOne;
@@ -522,18 +527,18 @@ router.get('/cart/decProduct/:index', ensureAuthenticated, (req, res) => {
 
   CartModel.updateOne({ _id: userCart._id }, { $set: userCart })
     .then((doc) => {
-      res.redirect('/cart');
+      res.redirect("/cart");
     })
     .catch((err) => console.log(err));
 });
 
-router.get('/cart/deleteProduct/:index', ensureAuthenticated, (req, res) => {
+router.get("/cart/deleteProduct/:index", ensureAuthenticated, (req, res) => {
   const { index } = req.params;
   const productsArray = req.user.cart.selectedProduct;
 
   if (req.user.cart.selectedProduct.length <= 1) {
     CartModel.findByIdAndDelete(req.user.cart._id).then((result) => {
-      res.redirect('/search-by-barcode');
+      res.redirect("/search-by-barcode");
     });
   } else {
     req.user.cart.totalQuantity =
@@ -547,26 +552,26 @@ router.get('/cart/deleteProduct/:index', ensureAuthenticated, (req, res) => {
 
     CartModel.updateOne({ _id: req.user.cart._id }, { $set: req.user.cart })
       .then((doc) => {
-        res.redirect('/cart');
+        res.redirect("/cart");
       })
       .catch((err) => console.log(err));
   }
 });
 
-router.get('/cart/sell/deleteAll', ensureAuthenticated, (req, res) => {
+router.get("/cart/sell/deleteAll", ensureAuthenticated, (req, res) => {
   CartModel.findByIdAndDelete(req.user.cart._id)
     .then((result) => {
-      res.redirect('/search-by-barcode');
+      res.redirect("/search-by-barcode");
     })
     .catch((err) => console.log(err));
 });
 
-router.get('/cart/sell/newBill', ensureAuthenticated, (req, res) => {
+router.get("/cart/sell/newBill", ensureAuthenticated, (req, res) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
-    totalProducts = '';
-    res.redirect('/search-by-barcode');
+    totalProducts = "";
+    res.redirect("/search-by-barcode");
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
@@ -596,13 +601,13 @@ router.get('/cart/sell/newBill', ensureAuthenticated, (req, res) => {
   bill
     .save()
     .then((result) => {
-      res.render('success-page', {
-        title: 'Success',
+      res.render("success-page", {
+        title: "Success",
         admin: req.user,
-        success_title: 'تمت عملية البيع بنجاح',
-        btn_title: 'طباعة الفاتورة',
+        success_title: "تمت عملية البيع بنجاح",
+        btn_title: "طباعة الفاتورة",
         btn_url: `/bills-list/print/${result._id}`,
-        target: '_blank',
+        target: "_blank",
         totalProducts,
       });
       CartModel.findByIdAndDelete(req.user.cart._id)
@@ -613,7 +618,7 @@ router.get('/cart/sell/newBill', ensureAuthenticated, (req, res) => {
 });
 
 router.post(
-  '/cart/edit-single-price',
+  "/cart/edit-single-price",
   ensureAuthenticated,
   async (req, res) => {
     const userCart = req.user.cart;
@@ -628,17 +633,38 @@ router.post(
 
     await CartModel.findByIdAndUpdate(req.user._id, { $set: userCart });
 
-    res.redirect('/cart');
+    res.redirect("/cart");
   }
 );
-router.post('/cart/general-discount', ensureAuthenticated, async (req, res) => {
+
+router.post("/cart/edit-single-weight", ensureAuthenticated, (req, res) => {
+  const { index,weight } = req.body;
+  const userCart = req.user.cart;
+  const productIndex = userCart.selectedProduct.findIndex(
+    (product) =>
+      JSON.stringify(product._id) === JSON.stringify(req.body.productId)
+  );
+  // Edit
+  userCart.selectedProduct[productIndex].quantity = weight;
+  userCart.totalPrice = userCart.totalPrice - userCart.selectedProduct[productIndex].price;
+  userCart.selectedProduct[productIndex].price = (weight / 1000) * userCart.selectedProduct[productIndex].priceOfOne;
+  userCart.totalPrice = userCart.totalPrice + userCart.selectedProduct[productIndex].price;
+
+  CartModel.updateOne({ _id: userCart._id }, { $set: userCart })
+    .then((doc) => {
+      res.redirect("/cart");
+    })
+    .catch((err) => console.log(err));
+});
+
+router.post("/cart/general-discount", ensureAuthenticated, async (req, res) => {
   const userCart = req.user.cart;
 
   userCart.totalPrice = +req.body.totalDiscount;
 
   await CartModel.findByIdAndUpdate(req.user._id, { $set: userCart });
 
-  res.redirect('/cart');
+  res.redirect("/cart");
 });
 
 module.exports = router;

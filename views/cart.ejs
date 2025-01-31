@@ -28,7 +28,7 @@ if (admin.cart.userDealer) { %>
               <th>#</th>
               <th>اسم المنتج</th>
               <th>العدد</th>
-              <th>سعر القطعة</th>
+              <th>سعر القطعة او الكيلو</th>
               <th>السعر الاجمالي</th>
             </tr>
           </thead>
@@ -51,8 +51,29 @@ if (admin.cart.userDealer) { %>
                 </a>
               </td>
               <td>
-                <% if(true){ %>
-                  <h1><%= JSON.stringify(ele) %></h1>
+                <% if(ele.isByWeight){ %>
+                  <form action="/cart/edit-single-weight" method="post">
+                    <label for="weight">الوزن بالجرام</label>
+                    <input
+                      type="text"
+                      class="form-control form-control-sm mb-1"
+                      name="weight"
+                      value="<%= ele.quantity %>"
+                    />
+                    <input
+                      type="hidden"
+                      name="productId"
+                      value="<%= ele._id %>"
+                    />
+                    <input
+                      type="hidden"
+                      name="ptype"
+                      value="<%= ele._id %>"
+                    />
+                    <button type="submit" class="btn btn-warning btn-sm">
+                      تحديث
+                    </button>
+                  </form>
                 <% } else{ %>  
                   <% if (ele.quantity <= 1) { %>
                     <a href="" class="btn me-2 disabled"
@@ -78,6 +99,9 @@ if (admin.cart.userDealer) { %>
               </td>
               <td><%= ele.priceOfOne %></td>
               <td>
+                <% if(ele.isByWeight){ %>
+                  <h3><%= ele.price %></h3>
+                  <% } else{ %>  
                 <form action="/cart/edit-single-price" method="post">
                   <input
                     type="number"
@@ -96,6 +120,7 @@ if (admin.cart.userDealer) { %>
                 </form>
               </td>
             </tr>
+            <% } %>
             <% }) %>
             <tr>
               <td colspan="2"></td>
