@@ -13,7 +13,7 @@ const ProductModel = require("../models/productModel");
 
 router.get("/cart/:id", ensureAuthenticated, (req, res, next) => {
   const { id } = req.params;
-  const prevPageUrl = `/${req.headers.referer.split("/")[3]}`
+  const prevPageUrl = `/${req.headers.referer.split("/")[3]}`;
   const cartId = req.user.id;
 
   ProductModel.findById(id)
@@ -26,7 +26,7 @@ router.get("/cart/:id", ensureAuthenticated, (req, res, next) => {
       const qtyInStore = +result.quantity;
       const newProduct = {
         _id: id,
-        price: result.isByWeight ? (1/1000) * price : price,
+        price: result.isByWeight ? (1 / 1000) * price : price,
         priceOfOne: price,
         name,
         quantity: 1,
@@ -39,14 +39,18 @@ router.get("/cart/:id", ensureAuthenticated, (req, res, next) => {
             const newCart = CartModel({
               _id: cartId,
               totalQuantity: 1,
-              totalPrice: result.isByWeight ? (1/1000) * price : price,
+              totalPrice: result.isByWeight ? (1 / 1000) * price : price,
               selectedProduct: [newProduct],
               dealer: false,
             });
             newCart
               .save()
               .then((doc) => {
-                res.redirect(prevPageUrl === "/sell-weight-products" && result.isByWeight ? "/sell-weight-products" : "/cart");
+                res.redirect(
+                  prevPageUrl === "/sell-weight-products" && result.isByWeight
+                    ? "/sell-weight-products"
+                    : "/cart"
+                );
               })
               .catch((err) => console.log(err));
           }
@@ -64,7 +68,11 @@ router.get("/cart/:id", ensureAuthenticated, (req, res, next) => {
                 cart.selectedProduct[indexOfProduct].quantity >=
                 cart.selectedProduct[indexOfProduct].qtyInStore
               ) {
-                res.redirect(prevPageUrl === "/sell-weight-products" && result.isByWeight ? "/sell-weight-products" : "/cart");
+                res.redirect(
+                  prevPageUrl === "/sell-weight-products" && result.isByWeight
+                    ? "/sell-weight-products"
+                    : "/cart"
+                );
               } else {
                 console.log(cart.selectedProduct[indexOfProduct].quantity);
                 console.log(cart.selectedProduct[indexOfProduct].qtyInStore);
@@ -81,23 +89,43 @@ router.get("/cart/:id", ensureAuthenticated, (req, res, next) => {
 
                   CartModel.updateOne({ _id: cartId }, { $set: cart })
                     .then((doc) => {
-                      res.redirect(prevPageUrl === "/sell-weight-products" && result.isByWeight ? "/sell-weight-products" : "/cart");
+                      res.redirect(
+                        prevPageUrl === "/sell-weight-products" &&
+                          result.isByWeight
+                          ? "/sell-weight-products"
+                          : "/cart"
+                      );
                     })
                     .catch((err) => console.log(err));
                 } else {
-                  cart.selectedProduct[indexOfProduct].quantity =
-                    cart.selectedProduct[indexOfProduct].quantity + 1;
+                  cart.selectedProduct[indexOfProduct].quantity = cart
+                    .selectedProduct[indexOfProduct].isByWeight
+                    ? cart.selectedProduct[indexOfProduct].quantity
+                    : cart.selectedProduct[indexOfProduct].quantity + 1;
 
-                  cart.selectedProduct[indexOfProduct].price =
-                    cart.selectedProduct[indexOfProduct].price + price;
+                  cart.selectedProduct[indexOfProduct].price = cart
+                    .selectedProduct[indexOfProduct].isByWeight
+                    ? cart.selectedProduct[indexOfProduct].price
+                    : cart.selectedProduct[indexOfProduct].price + price;
 
-                  cart.totalQuantity = cart.totalQuantity + 1;
+                  cart.totalQuantity = cart.selectedProduct[indexOfProduct]
+                    .isByWeight
+                    ? cart.totalQuantity
+                    : cart.totalQuantity + 1;
 
-                  cart.totalPrice = cart.totalPrice + price;
+                  cart.totalPrice = cart.selectedProduct[indexOfProduct]
+                    .isByWeight
+                    ? cart.totalPrice
+                    : cart.totalPrice + price;
 
                   CartModel.updateOne({ _id: cartId }, { $set: cart })
                     .then((doc) => {
-                      res.redirect(prevPageUrl === "/sell-weight-products" && result.isByWeight ? "/sell-weight-products" : "/cart");
+                      res.redirect(
+                        prevPageUrl === "/sell-weight-products" &&
+                          result.isByWeight
+                          ? "/sell-weight-products"
+                          : "/cart"
+                      );
                     })
                     .catch((err) => console.log(err));
                 }
@@ -121,15 +149,30 @@ router.get("/cart/:id", ensureAuthenticated, (req, res, next) => {
                 // update in mongodb
                 CartModel.updateOne({ _id: cartId }, { $set: cart })
                   .then((doc) => {
-                    res.redirect(prevPageUrl === "/sell-weight-products" && result.isByWeight ? "/sell-weight-products" : "/cart");
+                    res.redirect(
+                      prevPageUrl === "/sell-weight-products" &&
+                        result.isByWeight
+                        ? "/sell-weight-products"
+                        : "/cart"
+                    );
                   })
                   .catch((err) => console.log(err));
               } else {
+                const isProductExistInCart = cart.selectedProduct.find(
+                  (ele) =>
+                    JSON.stringify(ele._id) === JSON.stringify(newProduct._id)
+                );
                 // update qty
-                cart.totalQuantity = cart.totalQuantity + 1;
+                cart.totalQuantity =
+                  isProductExistInCart && newProduct.isByWeight
+                    ? cart.totalQuantity
+                    : cart.totalQuantity + 1;
 
                 // update total price
-                cart.totalPrice = cart.totalPrice + price;
+                cart.totalPrice =
+                  isProductExistInCart && newProduct.isByWeight
+                    ? cart.totalPrice
+                    : cart.totalPrice + (1 / 1000) * price;
 
                 // update product list
                 cart.selectedProduct.push(newProduct);
@@ -137,7 +180,12 @@ router.get("/cart/:id", ensureAuthenticated, (req, res, next) => {
                 // update in mongodb
                 CartModel.updateOne({ _id: cartId }, { $set: cart })
                   .then((doc) => {
-                    res.redirect(prevPageUrl === "/sell-weight-products" && result.isByWeight ? "/sell-weight-products" : "/cart");
+                    res.redirect(
+                      prevPageUrl === "/sell-weight-products" &&
+                        result.isByWeight
+                        ? "/sell-weight-products"
+                        : "/cart"
+                    );
                   })
                   .catch((err) => console.log(err));
               }
@@ -163,14 +211,14 @@ router.post("/cart", ensureAuthenticated, (req, res, next) => {
 
       ProductModel.findById(id)
         .then((result) => {
-          console.log(result.isByWeight ? (1/1000) * price : price);
-          
+          console.log(result.isByWeight ? (1 / 1000) * price : price);
+
           const name = result.name;
           const qtyInStore = +result.quantity;
           const price = +result.dealerPrice;
           const newProduct = {
             _id: id,
-            price: result.isByWeight ? (1/1000) * price : price,
+            price: result.isByWeight ? (1 / 1000) * price : price,
             priceOfOne: price,
             name,
             quantity: 1,
@@ -222,7 +270,9 @@ router.post("/cart", ensureAuthenticated, (req, res, next) => {
 
                   cart.totalQuantity = cart.totalQuantity + 1;
 
-                  cart.totalPrice = cart.totalPrice + price;
+                  cart.totalPrice = cart.selectedProduct[indexOfProduct]
+                    ? cart.totalPrice
+                    : cart.totalPrice + price;
 
                   CartModel.updateOne({ _id: cartId }, { $set: cart })
                     .then((doc) => {
@@ -253,14 +303,13 @@ router.post("/cart2", ensureAuthenticated, (req, res, next) => {
 
       ProductModel.findOne({ barcode: barcode })
         .then((result) => {
-          
           const id = result._id;
           const name = result.name;
           const qtyInStore = +result.quantity;
           const price = +result.dealerPrice;
           const newProduct = {
             _id: id,
-            price: result.isByWeight ? (1/1000) * price : price,
+            price: result.isByWeight ? (1 / 1000) * price : price,
             priceOfOne: price,
             name,
             quantity: 1,
@@ -347,7 +396,7 @@ router.get("/cart2/:barcode", ensureAuthenticated, (req, res, next) => {
 
       const newProduct = {
         _id: id,
-        price: result.isByWeight ? (1/1000) * price : price,
+        price: result.isByWeight ? (1 / 1000) * price : price,
         priceOfOne: price,
         name,
         quantity: 1,
@@ -359,7 +408,7 @@ router.get("/cart2/:barcode", ensureAuthenticated, (req, res, next) => {
             const newCart = CartModel({
               _id: cartId,
               totalQuantity: 1,
-              totalPrice: result.isByWeight ? (1/1000) * price : price,
+              totalPrice: result.isByWeight ? (1 / 1000) * price : price,
               selectedProduct: [newProduct],
               dealer: false,
             });
@@ -579,7 +628,7 @@ router.get("/cart/sell/newBill", ensureAuthenticated, (req, res) => {
   req.user.cart.selectedProduct.forEach((ele) => {
     ProductModel.findOne({ _id: ele._id })
       .then((doc) => {
-        doc.quantity = +doc.quantity - (+ele.quantity / 1000);
+        doc.quantity = +doc.quantity - +ele.quantity / 1000;
         ProductModel.findByIdAndUpdate(ele._id, {
           quantity: doc.quantity,
         })
@@ -638,7 +687,7 @@ router.post(
 );
 
 router.post("/cart/edit-single-weight", ensureAuthenticated, (req, res) => {
-  const { index,weight } = req.body;
+  const { index, weight } = req.body;
   const userCart = req.user.cart;
   const productIndex = userCart.selectedProduct.findIndex(
     (product) =>
@@ -646,9 +695,12 @@ router.post("/cart/edit-single-weight", ensureAuthenticated, (req, res) => {
   );
   // Edit
   userCart.selectedProduct[productIndex].quantity = weight;
-  userCart.totalPrice = userCart.totalPrice - userCart.selectedProduct[productIndex].price;
-  userCart.selectedProduct[productIndex].price = (weight / 1000) * userCart.selectedProduct[productIndex].priceOfOne;
-  userCart.totalPrice = userCart.totalPrice + userCart.selectedProduct[productIndex].price;
+  userCart.totalPrice =
+    userCart.totalPrice - userCart.selectedProduct[productIndex].price;
+  userCart.selectedProduct[productIndex].price =
+    (weight / 1000) * userCart.selectedProduct[productIndex].priceOfOne;
+  userCart.totalPrice =
+    userCart.totalPrice + userCart.selectedProduct[productIndex].price;
 
   CartModel.updateOne({ _id: userCart._id }, { $set: userCart })
     .then((doc) => {
