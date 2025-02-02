@@ -169,10 +169,14 @@ router.get("/cart/:id", ensureAuthenticated, (req, res, next) => {
                     : cart.totalQuantity + 1;
 
                 // update total price
+                console.log({ totalPrice: cart.totalPrice });
+
                 cart.totalPrice =
                   isProductExistInCart && newProduct.isByWeight
-                    ? cart.totalPrice
-                    : cart.totalPrice + (1 / 1000) * price;
+                    ? cart.totalPrice + (1 / 1000) * price
+                    : cart.totalPrice + price;
+
+                console.log({ totalPrice: cart.totalPrice });
 
                 // update product list
                 cart.selectedProduct.push(newProduct);
@@ -590,12 +594,16 @@ router.get("/cart/deleteProduct/:index", ensureAuthenticated, (req, res) => {
       res.redirect("/search-by-barcode");
     });
   } else {
-    req.user.cart.totalQuantity =
+    console.log({
+      deletedProductQty: req.user.cart.selectedProduct[index].quantity,
+    });
+
+    req.user.cart.totalQuantity = req.user.cart.selectedProduct[index].isByWeight ? req.user.cart.totalQuantity - 1 :
       req.user.cart.totalQuantity -
       req.user.cart.selectedProduct[index].quantity;
 
     req.user.cart.totalPrice =
-      req.user.cart.totalPrice - req.user.cart.selectedProduct[index].price;
+    (req.user.cart.totalPrice - req.user.cart.selectedProduct[index].price).toFixed(2);
 
     productsArray.splice(index, 1);
 

@@ -1,0 +1,60 @@
+[{
+  "_id": {
+    "$oid": "679f2e10dd96ac6677bc35c8"
+  },
+  "name": "كمون",
+  "price": 100,
+  "isByWeight": true,
+  "dealerPrice": 45,
+  "wholesale": 40,
+  "quantity": 30,
+  "barcode": "30654654654",
+  "image": "No Data",
+  "createdAt": {
+    "$date": "2025-02-02T08:34:24.648Z"
+  },
+  "updatedAt": {
+    "$date": "2025-02-02T08:35:29.267Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "679f2e27dd96ac6677bc35d4"
+  },
+  "name": "فلفل اسمر عدد",
+  "price": 50,
+  "isByWeight": false,
+  "dealerPrice": 45,
+  "wholesale": 40,
+  "quantity": 30,
+  "barcode": "30654654654",
+  "image": "No Data",
+  "createdAt": {
+    "$date": "2025-02-02T08:34:47.061Z"
+  },
+  "updatedAt": {
+    "$date": "2025-02-02T08:35:40.661Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "679f3791d9f37899342392e2"
+  },
+  "name": "كمون",
+  "price": 100,
+  "isByWeight": true,
+  "dealerPrice": 45,
+  "wholesale": 40,
+  "quantity": 30,
+  "barcode": "30654654654",
+  "image": "No Data",
+  "createdAt": {
+    "$date": "2025-02-02T08:34:24.648Z"
+  },
+  "updatedAt": {
+    "$date": "2025-02-02T08:35:29.267Z"
+  },
+  "__v": 0
+}]
